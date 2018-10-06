@@ -1,16 +1,16 @@
-import { bytecode, abi } from './EscrowContract.json';
+import { bytecode, abi } from './BlockWorkContract.json';
 import { web3 } from './web3Util.js';
 
-const EscrowContract = new web3.eth.Contract(abi);
+const BlockWorkContract = new web3.eth.Contract(abi);
 
-const deploy = (value, arbiterAddress, beneficiaryAddress, depositorAddress) => {
+const deploy = (value, requesterAddress, contractorAddress, arbiterAddress, agreement, contractFee) => {
     const deployParameters = {
-        arguments: [arbiterAddress, beneficiaryAddress],
+        arguments: [contractorAddress, arbiterAddress, agreement, contractFee],
         data: bytecode,
     }
-    return EscrowContract.deploy(deployParameters).estimateGas().then((gas) => {
-        return EscrowContract.deploy(deployParameters).send({
-            from: depositorAddress,
+    return BlockWorkContract.deploy(deployParameters).estimateGas().then((gas) => {
+        return BlockWorkContract.deploy(deployParameters).send({
+            from: requesterAddress,
             value,
             gas
         });

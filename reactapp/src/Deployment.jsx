@@ -7,8 +7,10 @@ class Deployment extends Component {
         super(props);
         this.state = {
             ether: '',
+            contractor: '',
             arbiter: '',
-            beneficiary: '',
+            agreement: '',
+            contractFee: '',
             transactions: [],
         }
         this.deploy = this.deploy.bind(this);
@@ -16,12 +18,12 @@ class Deployment extends Component {
     }
 
     deploy() {
-        const {ether, arbiter, beneficiary} = this.state;
+        const {ether, contractor, arbiter, agreement, contractFee} = this.state;
         if (web3) {
             web3.eth.getAccounts().then((accounts) => {
                 let account = accounts[0];
                 if (account) {
-                    deploy(+ether, arbiter, beneficiary, account).then(({options}) => {
+                    deploy(+ether, account, contractor, arbiter, agreement, contractFee).then(({options}) => {
                         const {address} = options;
                         this.setState({
                           transactions: this.state.transactions.concat(`Transaction was successful! Deployed to ${address}.`)
@@ -42,7 +44,7 @@ class Deployment extends Component {
     }
 
     render() {
-        const {ether, arbiter, beneficiary, transactions} = this.state;
+        const {ether, contractor, arbiter, agreement, contractFee, transactions} = this.state;
         return (
             <div className="container py-3 px-4 my-3 border">
                 <h1> Deployment Function </h1>
@@ -53,13 +55,27 @@ class Deployment extends Component {
                 <form className="p-sm">
                     <div className="form-group">
                         <label htmlFor="ether">
-                            Amount of Wei
+                            Total Wei
                             <input type="number" className="form-control" id="ether" placeholder="Ether Amount"
                                    value={ether} onChange={this.handleChange('ether')}/>
                         </label>
                     </div>
                     <div className="form-group">
+                        <label htmlFor="ether">
+                            Contract Fee
+                            <input type="number" className="form-control" id="contractFee" placeholder="Ether Amount"
+                                   value={contractFee} onChange={this.handleChange('contractFee')}/>
+                        </label>
+                    </div>
+                    <div className="form-group">
                         <label htmlFor="arbiter">
+                            Contractor Address
+                            <input type="text" className="form-control" id="contractor" placeholder="Address"
+                                   value={contractor} onChange={this.handleChange('contractor')}/>
+                        </label>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="beneficiary">
                             Arbiter Address
                             <input type="text" className="form-control" id="arbiter" placeholder="Address"
                                    value={arbiter} onChange={this.handleChange('arbiter')}/>
@@ -67,9 +83,9 @@ class Deployment extends Component {
                     </div>
                     <div className="form-group">
                         <label htmlFor="beneficiary">
-                            Beneficiary Address
-                            <input type="text" className="form-control" id="beneficiary" placeholder="Address"
-                                   value={beneficiary} onChange={this.handleChange('beneficiary')}/>
+                            Contract/Agreement
+                            <input type="text" className="form-control" id="agreement" placeholder="Text"
+                                   value={agreement} onChange={this.handleChange('agreement')}/>
                         </label>
                     </div>
                     <div className="btn btn-primary" onClick={this.deploy}>Deploy</div>
