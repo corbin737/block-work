@@ -3,7 +3,7 @@ import { web3 } from './web3Util.js';
 
 const BlockWorkContract = new web3.eth.Contract(abi);
 
-const submit = (blockWorkContractAddress, contractorAddress, work) => {
+const submit = (value, blockWorkContractAddress, contractorAddress, work) => {
   BlockWorkContract.options.address = blockWorkContractAddress;
 
   const submitParameters = {
@@ -11,8 +11,9 @@ const submit = (blockWorkContractAddress, contractorAddress, work) => {
       data: bytecode,
   }
 
-  return BlockWorkContract.methods['submit'](submitParameters).send({
-    from: contractorAddress
+  return BlockWorkContract.methods['submit'](work).send({
+    from: contractorAddress,
+    value
   })
 }
 

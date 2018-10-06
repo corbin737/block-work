@@ -6,7 +6,8 @@ class Submittal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            blockWorkAddress: '',
+            ether: '',
+            blockWorkContractAddress: '',
             work: '',
             transactions: [],
         }
@@ -15,13 +16,13 @@ class Submittal extends Component {
     }
 
     submit() {
-        const {blockWorkContractAddress, work} = this.state;
+        const {ether, blockWorkContractAddress, work} = this.state;
 
         if (web3) {
             web3.eth.getAccounts().then((accounts) => {
                 let account = accounts[0];
                 if (account) {
-                    submit(blockWorkContractAddress, account, work).then(() => {
+                    submit(ether, blockWorkContractAddress, account, work).then(() => {
                         this.setState({
                           transactions: this.state.transactions.concat(`Submittal successful for BlockWork at ${blockWorkContractAddress}.`)
                         });
@@ -41,7 +42,7 @@ class Submittal extends Component {
     }
 
     render() {
-        const {blockWorkContractAddress, work, transactions} = this.state;
+        const {ether, blockWorkContractAddress, work, transactions} = this.state;
         return (
             <div className="container py-3 px-4 my-3 border">
                 <h1> Submit Function </h1>
@@ -51,6 +52,13 @@ class Submittal extends Component {
                     Then, use the address from the contract and approve it.
                 </p>
                 <form>
+                    <div className="form-group">
+                        <label htmlFor="ether">
+                            Total Wei
+                            <input type="number" className="form-control" id="ether" placeholder="Ether Amount"
+                                   value={ether} onChange={this.handleChange('ether')}/>
+                        </label>
+                    </div>
                     <div className="form-group">
                         <label htmlFor="beneficiary">BlockWork Address
                             <input type="text" className="form-control" id="blockWork" placeholder="Contract Address"
@@ -63,7 +71,7 @@ class Submittal extends Component {
                                    value={work} onChange={this.handleChange('work')}/>
                         </label>
                     </div>
-                    <div className="btn btn-primary" onClick={this.approve}>Submit</div>
+                    <div className="btn btn-primary" onClick={this.submit}>Submit</div>
                 </form>
                 <ul className="list-group py-2">
                     {
