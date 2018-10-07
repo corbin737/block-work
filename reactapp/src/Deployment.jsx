@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import deploy from './contract/deploy';
 import {web3} from './contract/web3Util';
+import ipfs from 'ipfs-api';
+import {Buffer} from 'buffer';
 
 class Deployment extends Component {
     constructor(props) {
@@ -13,8 +15,14 @@ class Deployment extends Component {
             agreement: '',
             transactions: [],
         }
+
         this.deploy = this.deploy.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleAgreement = this.handleAgreement.bind(this);
+    }
+
+    componentDidMount() {
+        this.ipfsClient = ipfs('localhost', 5001);
     }
 
     deploy() {
@@ -49,6 +57,20 @@ class Deployment extends Component {
         return ({target}) => this.setState({[prop]: target.value});
     }
 
+    handleAgreement(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const buf = Buffer(reader.result);
+            this.ipfsClient.add([buf]).then(result => {
+                const {hash} = result[0];
+                this.setState({agreement: hash});
+            });
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+
     totalCost() {
         return (parseFloat(this.state['ether']) || 0) + (parseFloat(this.state['arbitrationFee']) || 0);
     }
@@ -74,13 +96,6 @@ class Deployment extends Component {
                         </label>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="beneficiary">
-                            Contract/Agreement
-                            <input type="text" className="form-control" id="agreement" placeholder="Text"
-                                   value={agreement} onChange={this.handleChange('agreement')}/>
-                        </label>
-                    </div>
-                    <div className="form-group">
                         <label htmlFor="ether">
                             Contract Price
                             <input type="number" className="form-control" id="ether" placeholder="Ether Amount"
@@ -92,6 +107,14 @@ class Deployment extends Component {
                             Arbitration Fee
                             <input type="number" className="form-control" id="arbitrationFee" placeholder="Ether Amount"
                                    value={arbitrationFee} onChange={this.handleChange('arbitrationFee')}/>
+                        </label>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="beneficiary">
+                            Contract/Agreement
+                            <input type="file" className="form-control" id="agreement"
+                                   onChange={this.handleAgreement}
+                            />
                         </label>
                     </div>
                     <hr/>
