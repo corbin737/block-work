@@ -2,9 +2,9 @@ module.exports = {
     networks: {
         development: {
             host: 'localhost',
-            port: 8545,
+            port: 7545,
             network_id: '*'
         }
     },
-    contracts_build_directory: '../reactapp/src/contract'
+    contracts_build_directory: 'C:\\Users\\corbi\\OneDrive\\Documents\\GitHub\\Escrow-React\\truffle\\reactapp\\src\\contract'
 };
