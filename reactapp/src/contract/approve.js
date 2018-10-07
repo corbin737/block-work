@@ -1,13 +1,13 @@
-import { bytecode, abi } from './EscrowContract.json';
+import { bytecode, abi } from './BlockWorkContract.json';
 import { web3 } from './web3Util.js';
 
-const EscrowContract = new web3.eth.Contract(abi);
+const BlockWorkContract = new web3.eth.Contract(abi);
 
-const approve = (escrowContractAddress, arbiterAddress) => {
-  EscrowContract.options.address = escrowContractAddress;
+const approve = (blockWorkContractAddress, requesterAddress) => {
+  BlockWorkContract.options.address = blockWorkContractAddress;
 
-  return EscrowContract.methods['approve']().send({
-    from: arbiterAddress
+  return BlockWorkContract.methods['approve']().send({
+    from: requesterAddress
   })
 }
 

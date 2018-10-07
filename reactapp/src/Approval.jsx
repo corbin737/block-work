@@ -6,7 +6,7 @@ class Approval extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            escrowAddress: '',
+            blockWorkContractAddress: '',
             transactions: [],
         }
         this.approve = this.approve.bind(this);
@@ -14,19 +14,19 @@ class Approval extends Component {
     }
 
     approve() {
-        const {escrowAddress} = this.state;
+        const {blockWorkContractAddress} = this.state;
 
         if (web3) {
             web3.eth.getAccounts().then((accounts) => {
                 let account = accounts[0];
                 if (account) {
-                    approve(escrowAddress, account).then(() => {
+                    approve(blockWorkContractAddress, account).then(() => {
                         this.setState({
-                          transactions: this.state.transactions.concat(`Approval successful for Escrow at ${escrowAddress}.`)
+                          transactions: this.state.transactions.concat(`Approval successful for BlockWork at ${blockWorkContractAddress}.`)
                         });
                     }).catch((err) => {
                         this.setState({
-                          transactions: this.state.transactions.concat(`Approval unsuccessful for Escrow at ${escrowAddress}.`)
+                          transactions: this.state.transactions.concat(`Approval unsuccessful for BlockWork at ${blockWorkContractAddress}.`)
                         });
                         alert(err);
                     });
@@ -40,7 +40,7 @@ class Approval extends Component {
     }
 
     render() {
-        const {escrowAddress, transactions} = this.state;
+        const {blockWorkContractAddress, transactions} = this.state;
         return (
             <div className="container py-3 px-4 my-3 border">
                 <h1> Approve Function </h1>
@@ -51,9 +51,9 @@ class Approval extends Component {
                 </p>
                 <form>
                     <div className="form-group">
-                        <label htmlFor="beneficiary">Escrow Address
-                            <input type="text" className="form-control" id="escrow" placeholder="Contract Address"
-                                   value={escrowAddress} onChange={this.handleChange('escrowAddress')}/>
+                        <label htmlFor="beneficiary">BlockWork Address
+                            <input type="text" className="form-control" id="blockWork" placeholder="Contract Address"
+                                   value={blockWorkContractAddress} onChange={this.handleChange('blockWorkContractAddress')}/>
                         </label>
                     </div>
                     <div className="btn btn-primary" onClick={this.approve}>Approve</div>
