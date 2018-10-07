@@ -18,7 +18,7 @@ class Deployment extends Component {
 
         this.deploy = this.deploy.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.handleAgreement = this.handleAgreement.bind(this);
+        this.handleUploadAgreement = this.handleUploadAgreement.bind(this);
     }
 
     componentDidMount() {
@@ -57,7 +57,7 @@ class Deployment extends Component {
         return ({target}) => this.setState({[prop]: target.value});
     }
 
-    handleAgreement(event) {
+    handleUploadAgreement(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -113,7 +113,7 @@ class Deployment extends Component {
                         <label htmlFor="beneficiary">
                             Contract/Agreement
                             <input type="file" className="form-control" id="agreement"
-                                   onChange={this.handleAgreement}
+                                   onChange={this.handleUploadAgreement}
                             />
                         </label>
                     </div>
