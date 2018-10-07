@@ -3,9 +3,9 @@ import { web3 } from './web3Util.js';
 
 const BlockWorkContract = new web3.eth.Contract(abi);
 
-const deploy = (value, requesterAddress, contractorAddress, arbiterAddress, agreement, contractFee) => {
+const deploy = (value, requesterAddress, contractorAddress, arbiterAddress, agreement, arbitrationFee) => {
     const deployParameters = {
-        arguments: [contractorAddress, arbiterAddress, agreement, contractFee],
+        arguments: [contractorAddress, arbiterAddress, agreement, arbitrationFee],
         data: bytecode,
     }
     return BlockWorkContract.deploy(deployParameters).estimateGas().then((gas) => {

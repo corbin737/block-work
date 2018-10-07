@@ -13,7 +13,7 @@ contract BlockWorkContract {
 
     bool public isRejected;
 
-    function BlockWorkContract(
+    constructor(
         address _contractor,
         address _arbiter,
         string _agreement,
@@ -30,7 +30,7 @@ contract BlockWorkContract {
 
     function submit(string _work) public payable {
         require(msg.sender == contractor);
-        require(msg.value == contractFee);
+        require(msg.value == arbitrationFee);
         work = _work;
     }
 

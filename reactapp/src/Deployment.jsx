@@ -7,10 +7,10 @@ class Deployment extends Component {
         super(props);
         this.state = {
             ether: '',
+            arbitrationFee: '',
             contractor: '',
             arbiter: '',
             agreement: '',
-            contractFee: '',
             transactions: [],
         }
         this.deploy = this.deploy.bind(this);
@@ -18,12 +18,12 @@ class Deployment extends Component {
     }
 
     deploy() {
-        const {ether, contractor, arbiter, agreement, contractFee} = this.state;
+        const {ether, arbitrationFee, contractor, arbiter, agreement} = this.state;
         if (web3) {
             web3.eth.getAccounts().then((accounts) => {
                 let account = accounts[0];
                 if (account) {
-                    deploy(+ether, account, contractor, arbiter, agreement, contractFee).then(({options}) => {
+                    deploy(+ether, account, contractor, arbiter, agreement, arbitrationFee).then(({options}) => {
                         const {address} = options;
                         this.setState({
                           transactions: this.state.transactions.concat(`Transaction was successful! Deployed to ${address}.`)
@@ -44,7 +44,7 @@ class Deployment extends Component {
     }
 
     render() {
-        const {ether, contractor, arbiter, agreement, contractFee, transactions} = this.state;
+        const {ether, arbitrationFee, contractor, arbiter, agreement, transactions} = this.state;
         return (
             <div className="container py-3 px-4 my-3 border">
                 <h1> Deployment Function </h1>
@@ -62,9 +62,9 @@ class Deployment extends Component {
                     </div>
                     <div className="form-group">
                         <label htmlFor="ether">
-                            Contract Fee
-                            <input type="number" className="form-control" id="contractFee" placeholder="Ether Amount"
-                                   value={contractFee} onChange={this.handleChange('contractFee')}/>
+                            Arbitration Fee
+                            <input type="number" className="form-control" id="arbitrationFee" placeholder="Ether Amount"
+                                   value={arbitrationFee} onChange={this.handleChange('arbitrationFee')}/>
                         </label>
                     </div>
                     <div className="form-group">
