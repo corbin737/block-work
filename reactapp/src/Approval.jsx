@@ -6,7 +6,7 @@ class Approval extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            blockWorkContractAddress: '',
+            blockWorkContractAddress: props['address'],
             transactions: [],
         }
         this.approve = this.approve.bind(this);
@@ -40,7 +40,7 @@ class Approval extends Component {
     }
 
     render() {
-        const {blockWorkContractAddress, transactions} = this.state;
+        const {transactions} = this.state;
         return (
             <div className="container py-3 px-4 my-3 border">
                 <h1> Approve Function </h1>
@@ -49,15 +49,7 @@ class Approval extends Component {
                     First you'll need to deploy an escrow contract before you can approve it.
                     Then, use the address from the contract and approve it.
                 </p>
-                <form>
-                    <div className="form-group">
-                        <label htmlFor="beneficiary">BlockWork Address
-                            <input type="text" className="form-control" id="blockWork" placeholder="Contract Address"
-                                   value={blockWorkContractAddress} onChange={this.handleChange('blockWorkContractAddress')}/>
-                        </label>
-                    </div>
-                    <div className="btn btn-primary" onClick={this.approve}>Approve</div>
-                </form>
+                <button className="btn btn-primary" onClick={this.approve}>Approve</button>
                 <ul className="list-group py-2">
                     {
                         transactions.map(tx => {

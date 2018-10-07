@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import contract from './contract/contract';
 import deploy from './contract/deploy';
 import {web3} from './contract/web3Util';
 
@@ -29,16 +30,29 @@ class Deployment extends Component {
             web3.eth.getAccounts().then((accounts) => {
                 let account = accounts[0];
                 if (account) {
+                    debugger;
                     deploy(total, account, contractor, arbiter, agreement, arbitrationFeeInWei).then(({options}) => {
+                        debugger;
                         const {address} = options;
                         this.setState({
                           transactions: this.state.transactions.concat(`Transaction was successful! Deployed to ${address}.`)
                         });
+                        this.props.onContractDeployed(address);
+                        contract(address).WorkSubmitted().watch((err, result) => {
+                            if (!err) {
+                                console.log(contract(address));
+                                console.log(contract.methods.work().call());
+                                this.props.onContractWorked(contract(address).methods.work().call());
+                            } else {
+                                alert('err from event' + err);
+                            }
+                        })
                     }).catch((err) => {
+                        debugger;
                         this.setState({
                           transactions: this.state.transactions.concat(`Deployment Failed.`)
                         });
-                        alert(err);
+                        alert('err from deploy' + err);
                     });
                 }
             })
