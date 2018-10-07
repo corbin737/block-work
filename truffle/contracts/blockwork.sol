@@ -13,6 +13,10 @@ contract BlockWorkContract {
 
     bool public isRejected;
 
+    event WorkSubmitted();
+    event WorkRejected();
+    event ArbitrationResolved(bool approved);
+
     constructor(
         address _contractor,
         address _arbiter,
@@ -32,6 +36,7 @@ contract BlockWorkContract {
         require(msg.sender == contractor);
         require(msg.value == arbitrationFee);
         work = _work;
+        emit WorkSubmitted();
     }
 
     function approve() public {
@@ -43,6 +48,7 @@ contract BlockWorkContract {
     function reject() public {
         require(msg.sender == requester);
         isRejected = true;
+        emit WorkRejected();
     }
 
     function arbiterApprove() public {
@@ -50,6 +56,7 @@ contract BlockWorkContract {
         require(isRejected == true);
         contractor.transfer(contractFee + arbitrationFee);
         arbiter.transfer(arbitrationFee);
+        emit ArbitrationResolved(true);
     }
 
     function arbiterReject() public {
@@ -57,6 +64,7 @@ contract BlockWorkContract {
         require(isRejected == true);
         requester.transfer(contractFee + arbitrationFee);
         arbiter.transfer(arbitrationFee);
+        emit ArbitrationResolved(false);
     }
 
 }
