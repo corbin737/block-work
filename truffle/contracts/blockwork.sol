@@ -17,20 +17,20 @@ contract BlockWorkContract {
         address _contractor,
         address _arbiter,
         string _agreement,
-        uint _contractFee
+        uint _arbitrationFee
     ) public payable {
         requester = msg.sender;
         contractor = _contractor;
         arbiter = _arbiter;
         agreement = _agreement;
-        contractFee = _contractFee;
-        arbitrationFee = msg.value - contractFee;
+        arbitrationFee = _arbitrationFee;
+        contractFee = msg.value - arbitrationFee;
         isRejected = false;
     }
 
     function submit(string _work) public payable {
         require(msg.sender == contractor);
-        require(msg.value == arbitrationFee);
+        require(msg.value == contractFee);
         work = _work;
     }
 
