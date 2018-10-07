@@ -13,11 +13,13 @@ class App extends Component {
     return (
         <React.Fragment>
             <Deployment />
+            {/*
             <Submittal />
             <Approval />
             <Rejection />
             <ArbiterApproval />
             <ArbiterRejection />
+            */}
         </React.Fragment>
     );
   }

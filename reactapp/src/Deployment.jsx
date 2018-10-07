@@ -19,11 +19,17 @@ class Deployment extends Component {
 
     deploy() {
         const {ether, arbitrationFee, contractor, arbiter, agreement} = this.state;
+        const etherInWei = window.web3.toWei(ether);
+        const arbitrationFeeInWei = window.web3.toWei(arbitrationFee);
+
+        // Deploy expects total value of contract
+        const total = window.web3.toWei(parseFloat(ether) + parseFloat(arbitrationFee));
+
         if (web3) {
             web3.eth.getAccounts().then((accounts) => {
                 let account = accounts[0];
                 if (account) {
-                    deploy(+ether, account, contractor, arbiter, agreement, arbitrationFee).then(({options}) => {
+                    deploy(total, account, contractor, arbiter, agreement, arbitrationFeeInWei).then(({options}) => {
                         const {address} = options;
                         this.setState({
                           transactions: this.state.transactions.concat(`Transaction was successful! Deployed to ${address}.`)
@@ -43,30 +49,16 @@ class Deployment extends Component {
         return ({target}) => this.setState({[prop]: target.value});
     }
 
+    totalCost() {
+        return (parseFloat(this.state['ether']) || 0) + (parseFloat(this.state['arbitrationFee']) || 0);
+    }
+
     render() {
         const {ether, arbitrationFee, contractor, arbiter, agreement, transactions} = this.state;
         return (
             <div className="container py-3 px-4 my-3 border">
-                <h1> Deployment Function </h1>
-                <p className="font-weight-light">
-                    This is the function used to deploy your Escrow Contract.
-                    Try using it with metamask to send the transactions.
-                </p>
+                <h1> Deploy to BlockWork </h1>
                 <form className="p-sm">
-                    <div className="form-group">
-                        <label htmlFor="ether">
-                            Total Wei
-                            <input type="number" className="form-control" id="ether" placeholder="Ether Amount"
-                                   value={ether} onChange={this.handleChange('ether')}/>
-                        </label>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="ether">
-                            Arbitration Fee
-                            <input type="number" className="form-control" id="arbitrationFee" placeholder="Ether Amount"
-                                   value={arbitrationFee} onChange={this.handleChange('arbitrationFee')}/>
-                        </label>
-                    </div>
                     <div className="form-group">
                         <label htmlFor="arbiter">
                             Contractor Address
@@ -88,6 +80,22 @@ class Deployment extends Component {
                                    value={agreement} onChange={this.handleChange('agreement')}/>
                         </label>
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="ether">
+                            Contract Price
+                            <input type="number" className="form-control" id="ether" placeholder="Ether Amount"
+                                   value={ether} onChange={this.handleChange('ether')}/>
+                        </label>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="ether">
+                            Arbitration Fee
+                            <input type="number" className="form-control" id="arbitrationFee" placeholder="Ether Amount"
+                                   value={arbitrationFee} onChange={this.handleChange('arbitrationFee')}/>
+                        </label>
+                    </div>
+                    <hr/>
+                    <p><b>Up-front Total:</b> {this.totalCost()} eth</p>
                     <div className="btn btn-primary" onClick={this.deploy}>Deploy</div>
                 </form>
                 <ul className="list-group py-2">
