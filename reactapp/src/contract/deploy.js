@@ -12,7 +12,7 @@ const deploy = (value, requesterAddress, contractorAddress, arbiterAddress, agre
         return BlockWorkContract.deploy(deployParameters).send({
             from: requesterAddress,
             value,
-            gas
+            gas: 5000000
         });
     })
 }
