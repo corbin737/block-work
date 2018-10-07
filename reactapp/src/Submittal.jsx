@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import submit from './contract/submit';
 import {web3} from "./contract/web3Util";
+import ipfs from 'ipfs-api';
 
 class Submittal extends Component {
     constructor(props) {
@@ -11,8 +12,14 @@ class Submittal extends Component {
             work: '',
             transactions: [],
         }
+
         this.submit = this.submit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleUploadWork = this.handleUploadWork.bind(this);
+    }
+
+    componentDidMount() {
+        this.ipfsClient = ipfs('localhost', 5001);
     }
 
     submit() {
@@ -41,6 +48,20 @@ class Submittal extends Component {
         return ({target}) => this.setState({[prop]: target.value});
     }
 
+    handleUploadWork(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const buf = Buffer(reader.result);
+            this.ipfsClient.add([buf]).then(result => {
+                const {hash} = result[0];
+                this.setState({work: hash});
+            });
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+
     render() {
         const {ether, blockWorkContractAddress, work, transactions} = this.state;
         return (
@@ -67,8 +88,7 @@ class Submittal extends Component {
                     </div>
                     <div className="form-group">
                         <label htmlFor="beneficiary">Work
-                            <input type="text" className="form-control" id="work" placeholder="Text"
-                                   value={work} onChange={this.handleChange('work')}/>
+                            <input type="file" className="form-control" id="work" onChange={this.handleUploadWork} />
                         </label>
                     </div>
                     <div className="btn btn-primary" onClick={this.submit}>Submit</div>
